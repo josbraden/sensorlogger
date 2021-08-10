@@ -1,0 +1,18 @@
+# Quick CI script
+stages:
+  - code
+py_compile:
+  stage: code
+  before_script:
+    - apt update -qq
+    - apt install -y python3 -qq
+  script:
+    - python3 -m py_compile *.py
+flake8:
+  stage: code
+  before_script:
+    - apt update -qq
+    - apt install -y python3 python3-pip -qq
+    - pip3 install flake8
+  script:
+    - flake8 --max-line-length 99 *.py
