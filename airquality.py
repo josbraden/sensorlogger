@@ -7,6 +7,7 @@ import time
 
 # Variables
 pollinterval = 5
+failSleep = 30
 # DB Stuff
 dbhost = "127.0.0.1"
 dbuser = "dbuser"
@@ -16,30 +17,6 @@ dbcompress = False
 # These should be fine unless you also altered the schema file
 dbcharset = "utf8mb4"
 dbcollation = "utf8mb4_general_ci"
-
-# Function to test database connection
-def testMySQL():
-    print("Testing database connection...", end='')
-    try:
-        connection = mysql.connector.connect(
-            host=dbhost, user=dbuser, passwd=dbpasswd,
-            database=dbschema, compress=dbcompress)
-
-    except mysql.connector.Error as err:
-        print(err)
-        return -1
-
-    else:
-        connection.set_charset_collation(dbcharset, dbcollation)
-        connectioncursor = connection.cursor()
-        connectioncursor.execute("SELECT 0")
-        connresult = connectioncursor.fetchone()
-        for i in connresult:
-            print("Success")
-
-        connectioncursor.close()
-        connection.close()
-        return 0
 
 
 # Function to read data from sensor
@@ -56,5 +33,10 @@ def readsensor():
 
 # Main function
 while True:
-    readsensor()
-    time.sleep(pollinterval)
+    ret = readsensor()
+    if ret != 0:
+        print("Error logging data")
+        time.sleep(failSleep)
+
+    else:
+        time.sleep(pollinterval)
