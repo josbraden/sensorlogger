@@ -4,6 +4,7 @@
 
 import serial
 import time
+import mysql.connector
 
 # Variables
 pollinterval = 5
@@ -17,6 +18,7 @@ dbcompress = False
 # These should be fine unless you also altered the schema file
 dbcharset = "utf8mb4"
 dbcollation = "utf8mb4_general_ci"
+
 
 # Function to insert sensor data to database
 def insertData(pmtwofive, pmten):
