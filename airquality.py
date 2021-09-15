@@ -9,6 +9,7 @@ import mysql.connector
 # Variables
 pollinterval = 5
 failSleep = 30
+upperLevel = 1000
 # DB Stuff
 dbhost = "127.0.0.1"
 dbuser = "dbuser"
@@ -55,16 +56,26 @@ def readsensor():
 
     pmtwofive = int.from_bytes(b''.join(data[2:4]), byteorder='little') / 10
     pmten = int.from_bytes(b''.join(data[4:6]), byteorder='little') / 10
-    ret = insertData(pmtwofive, pmten)
+    # Ignore anomalously large values
+    if pmtwofive > upperLevel or pmten > upperLevel:
+        ret = 1
+
+    else:
+        ret = insertData(pmtwofive, pmten)
+
     return ret
 
 
 # Main function
 while True:
     ret = readsensor()
-    if ret != 0:
-        print("Error logging data")
-        time.sleep(failSleep)
+    if ret == 0:
+        time.sleep(pollinterval)
+
+    elif ret == 1:
+        print("Ignored a large sensor value")
+        time.sleep(pollinterval)
 
     else:
-        time.sleep(pollinterval)
+        print("Error logging data")
+        time.sleep(failSleep)
