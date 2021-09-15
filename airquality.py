@@ -60,7 +60,7 @@ def readsensor():
     if pmtwofive > upperLevel or pmten > upperLevel:
         return 1
 
-    return = insertData(pmtwofive, pmten)
+    return insertData(pmtwofive, pmten)
 
 
 # Main function
