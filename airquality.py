@@ -58,12 +58,9 @@ def readsensor():
     pmten = int.from_bytes(b''.join(data[4:6]), byteorder='little') / 10
     # Ignore anomalously large values
     if pmtwofive > upperLevel or pmten > upperLevel:
-        ret = 1
+        return 1
 
-    else:
-        ret = insertData(pmtwofive, pmten)
-
-    return ret
+    return = insertData(pmtwofive, pmten)
 
 
 # Main function
