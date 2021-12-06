@@ -4,6 +4,7 @@
 
 import serial
 import time
+import os
 import mysql.connector
 
 # Variables
@@ -48,7 +49,16 @@ def insertData(pmtwofive, pmten):
 
 # Function to read data from sensor
 def readsensor():
-    ser = serial.Serial('/dev/ttyUSB0')
+    if os.path.exists('/dev/ttyUSB0'):
+        ser = serial.Serial('/dev/ttyUSB0')
+
+    elif os.path.exists('/dev/ttyUSB1'):
+        ser = serial.Serial('/dev/ttyUSB1')
+
+    else:
+        print("Sensor not found")
+        return 2
+
     data = []
     for index in range(0, 10):
         datum = ser.read()
