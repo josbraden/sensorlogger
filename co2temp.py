@@ -26,8 +26,8 @@ dbcollation = "utf8mb4_general_ci"
 
 # Function to insert sensor data to database
 def insertData(co2level, temperature):
-    query = "INSERT INTO co2 (co2level) VALUES ("
-    query += str(co2level) + ")"
+    query = "INSERT INTO co2 (co2level) VALUES ('"
+    query += str(co2level) + "')"
     try:
         connection = mysql.connector.connect(
             host=dbhost, user=dbuser, passwd=dbpasswd,
@@ -45,8 +45,8 @@ def insertData(co2level, temperature):
         connectioncursor.close()
         connection.close()
 
-    query = "INSERT INTO temperature (temp_indoor) VALUES ("
-    query += str(temperature) + ")"
+    query = "INSERT INTO temperature (temp_indoor) VALUES ('"
+    query += str(temperature) + "')"
     try:
         connection = mysql.connector.connect(
             host=dbhost, user=dbuser, passwd=dbpasswd,
@@ -70,7 +70,7 @@ def insertData(co2level, temperature):
 # Function to read data from sensor
 def readsensor():
     mon = co2meter.CO2monitor()
-    data = mon.read_data()
+    data = mon.read_data(bypass_decrypt=True)
     return insertData(data[1], data[2])
 
 
