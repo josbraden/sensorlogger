@@ -68,15 +68,15 @@ def insertData(co2level, temperature):
 
 
 # Function to read data from sensor
-def readsensor():
-    mon = co2meter.CO2monitor()
-    data = mon.read_data(bypass_decrypt=True)
+def readsensor(mon):
+    data = mon.read_data()
     return insertData(data[1], data[2])
 
 
 # Main function
+mon = co2meter.CO2monitor(bypass_decrypt=True)
 while True:
-    ret = readsensor()
+    ret = readsensor(mon)
     if ret == 0:
         time.sleep(pollinterval)
 
