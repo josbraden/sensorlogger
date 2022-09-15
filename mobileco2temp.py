@@ -116,16 +116,20 @@ def checkHome():
 
 
 # Main function
-mon = co2meter.CO2monitor(bypass_decrypt=True)
-while True:
-    ret = readsensor(mon)
-    if ret == 0:
-        time.sleep(pollinterval)
+if checkHome:
+    print("TODO upload data files")
 
-    elif ret == 1:
-        print("Ignored a large sensor value")
-        time.sleep(pollinterval)
+else:
+    mon = co2meter.CO2monitor(bypass_decrypt=True)
+    while True:
+        ret = readsensor(mon)
+        if ret == 0:
+            time.sleep(pollinterval)
 
-    else:
-        print("Error logging data")
-        time.sleep(failSleep)
+        elif ret == 1:
+            print("Ignored a large sensor value")
+            time.sleep(pollinterval)
+
+        else:
+            print("Error logging data")
+            time.sleep(failSleep)
