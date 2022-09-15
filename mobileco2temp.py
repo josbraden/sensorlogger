@@ -16,6 +16,8 @@ import mysql.connector
 # Variables
 pollinterval = 30
 failSleep = 120
+# If True, assume we're never home, even if we are
+logHome = False
 # DB Stuff
 dbhost = "127.0.0.1"
 dbuser = "dbuser"
@@ -25,6 +27,30 @@ dbcompress = False
 # These should be fine unless you also altered the schema file
 dbcharset = "utf8mb4"
 dbcollation = "utf8mb4_general_ci"
+
+
+# Function to test database connection
+def testMySQL():
+    try:
+        connection = mysql.connector.connect(
+            host=dbhost, user=dbuser, passwd=dbpasswd,
+            database=dbschema, compress=dbcompress)
+
+    except mysql.connector.Error as err:
+        print(err)
+        return -1
+
+    else:
+        connection.set_charset_collation(dbcharset, dbcollation)
+        connectioncursor = connection.cursor()
+        connectioncursor.execute("SELECT COUNT(*) FROM mobileco2")
+        connresult = connectioncursor.fetchone()
+        for i in connresult:
+            print("Success")
+
+        connectioncursor.close()
+        connection.close()
+        return 0
 
 
 # Function to insert sensor data to database
@@ -74,6 +100,19 @@ def insertData(co2level, temperature, time):
 def readsensor(mon):
     data = mon.read_data()
     return insertData(data[1], data[2])
+
+
+# Function to check if we're at home or now
+# If we're at home, don't log data, instead upload data file(s)
+def checkHome():
+    if logHome:
+        return False
+
+    elif dbhost != "127.0.0.1" and testMySQL:
+        return True
+
+    else:
+        return False
 
 
 # Main function
