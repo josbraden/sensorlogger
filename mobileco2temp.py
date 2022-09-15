@@ -48,7 +48,7 @@ def insertData(co2level, temperature, time):
         connectioncursor.close()
         connection.close()
 
-    query = "INSERT INTO temperature (temp_indoor,time) VALUES ('"
+    query = "INSERT INTO mobiletemperature (temp_indoor,time) VALUES ('"
     query += str(temperature) + "," + str(time) + "')"
     try:
         connection = mysql.connector.connect(
