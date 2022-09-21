@@ -61,7 +61,7 @@ def testMySQL():
 # Function to insert sensor data to database
 def insertData(co2level, temperature, time):
     query = "INSERT INTO mobileco2 (co2level,time) VALUES ('"
-    query += str(co2level) + "," + str(time) + "')"
+    query += str(co2level) + "','" + str(time) + "')"
     try:
         connection = mysql.connector.connect(
             host=dbhost, user=dbuser, passwd=dbpasswd,
@@ -80,7 +80,7 @@ def insertData(co2level, temperature, time):
         connection.close()
 
     query = "INSERT INTO mobiletemperature (temp,time) VALUES ('"
-    query += str(temperature) + "," + str(time) + "')"
+    query += str(temperature) + "','" + str(time) + "')"
     try:
         connection = mysql.connector.connect(
             host=dbhost, user=dbuser, passwd=dbpasswd,
