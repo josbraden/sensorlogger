@@ -12,6 +12,8 @@
 import time
 import co2meter
 import mysql.connector
+import csv
+from datetime import datetime
 
 # Variables
 pollinterval = 30
@@ -96,10 +98,15 @@ def insertData(co2level, temperature, time):
     return 0
 
 
-# Function to read data from sensor
-def readsensor(mon):
+# Function to read data from sensor and write to a CSV
+def readsensor(mon, filename):
     data = mon.read_data()
-    return insertData(data[1], data[2])
+    # Open the data file with no buffering
+    fp = open(filename, 'w', buffering=0)
+    writer = csv.writer(fp)
+    writer.writerow(data)
+    fp.close()
+    return 0
 
 
 # Function to check if we're at home or now
@@ -121,15 +128,7 @@ if checkHome:
 
 else:
     mon = co2meter.CO2monitor(bypass_decrypt=True)
+    filename = "data/mobileco2-" + (str(datetime.now())).replace(" ", ".") + ".csv"
     while True:
-        ret = readsensor(mon)
-        if ret == 0:
-            time.sleep(pollinterval)
-
-        elif ret == 1:
-            print("Ignored a large sensor value")
-            time.sleep(pollinterval)
-
-        else:
-            print("Error logging data")
-            time.sleep(failSleep)
+        ret = readsensor(mon, filename)
+        time.sleep(pollinterval)
