@@ -142,7 +142,7 @@ def checkHome():
 if not os.path.exists('data'):
     os.makedirs('data')
 
-if checkHome:
+if checkHome():
     uploadData()
     # TODO add an auto shutdown mode that runs updates and powers off
 
