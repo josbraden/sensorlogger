@@ -21,6 +21,8 @@ pollinterval = 30
 failSleep = 120
 # If True, assume we're never home, even if we are
 logHome = False
+workingDir = "/home/pi"
+dataDir = workingDir + "/data"
 # DB Stuff
 dbhost = "127.0.0.1"
 dbuser = "dbuser"
@@ -101,8 +103,9 @@ def insertData(co2level, temperature, time):
 
 # Function to upload data files to the database server
 def uploadData():
-    for filename in os.listdir('data'):
-        fp = open(filename, 'r')
+    for filename in os.listdir(dataDir):
+        fullFileName = dataDir + "/" + filename
+        fp = open(fullFileName, 'r')
         reader = csv.reader(fp)
         for row in reader:
             ret = insertData(str(row[1]), str(row[2]), str(row[0]))
@@ -112,7 +115,7 @@ def uploadData():
                 return ret
 
         fp.close()
-        os.remove(filename)
+        os.remove(fullFileName)
 
 
 # Function to read data from sensor and write to a CSV
@@ -139,8 +142,8 @@ def checkHome():
 
 
 # Main function
-if not os.path.exists('data'):
-    os.makedirs('data')
+if not os.path.exists(dataDir):
+    os.makedirs(dataDir)
 
 if checkHome():
     uploadData()
@@ -148,7 +151,7 @@ if checkHome():
 
 else:
     mon = co2meter.CO2monitor(bypass_decrypt=True)
-    filename = "data/mobileco2-" + (str(datetime.now())).replace(" ", ".") + ".csv"
+    filename = dataDir + "mobileco2-" + (str(datetime.now())).replace(" ", ".") + ".csv"
     while True:
         ret = readsensor(mon, filename)
         time.sleep(pollinterval)
