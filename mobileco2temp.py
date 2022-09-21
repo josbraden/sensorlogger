@@ -13,6 +13,7 @@ import time
 import co2meter
 import mysql.connector
 import csv
+import os
 from datetime import datetime
 
 # Variables
@@ -76,7 +77,7 @@ def insertData(co2level, temperature, time):
         connectioncursor.close()
         connection.close()
 
-    query = "INSERT INTO mobiletemperature (temp_indoor,time) VALUES ('"
+    query = "INSERT INTO mobiletemperature (temp,time) VALUES ('"
     query += str(temperature) + "," + str(time) + "')"
     try:
         connection = mysql.connector.connect(
@@ -96,6 +97,22 @@ def insertData(co2level, temperature, time):
         connection.close()
 
     return 0
+
+
+# Function to upload data files to the database server
+def uploadData():
+    for filename in os.listdir('data'):
+        fp = open(filename, 'r')
+        reader = csv.reader(fp)
+        for row in reader:
+            ret = insertData(str(row[1]), str(row[2]), str(row[0]))
+            if ret:
+                print("Error inserting data")
+                fp.close()
+                return ret
+
+        fp.close()
+        os.remove(filename)
 
 
 # Function to read data from sensor and write to a CSV
@@ -123,8 +140,11 @@ def checkHome():
 
 
 # Main function
+if not os.path.exists('data'):
+    os.makedirs('data')
+
 if checkHome:
-    print("TODO upload data files")
+    uploadData()
 
 else:
     mon = co2meter.CO2monitor(bypass_decrypt=True)
