@@ -118,8 +118,7 @@ def uploadData():
 # Function to read data from sensor and write to a CSV
 def readsensor(mon, filename):
     data = mon.read_data()
-    # Open the data file with no buffering
-    fp = open(filename, 'w', buffering=0)
+    fp = open(filename, 'w')
     writer = csv.writer(fp)
     writer.writerow(data)
     fp.close()
