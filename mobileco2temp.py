@@ -144,6 +144,7 @@ if not os.path.exists('data'):
 
 if checkHome:
     uploadData()
+    # TODO add an auto shutdown mode that runs updates and powers off
 
 else:
     mon = co2meter.CO2monitor(bypass_decrypt=True)
