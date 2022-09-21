@@ -3,6 +3,7 @@
 *.json.*
 logNum.txt
 tmp/
+data/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
