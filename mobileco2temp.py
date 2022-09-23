@@ -151,7 +151,7 @@ if checkHome():
 
 else:
     mon = co2meter.CO2monitor(bypass_decrypt=True)
-    filename = dataDir + "mobileco2-" + (str(datetime.now())).replace(" ", ".") + ".csv"
+    filename = dataDir + "/" + "mobileco2-" + (str(datetime.now())).replace(" ", ".") + ".csv"
     while True:
         ret = readsensor(mon, filename)
         time.sleep(pollinterval)
