@@ -134,7 +134,7 @@ def checkHome():
     if logHome:
         return False
 
-    elif dbhost != "127.0.0.1" and testMySQL:
+    elif dbhost != "127.0.0.1" and not testMySQL():
         return True
 
     else:
