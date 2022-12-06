@@ -1,6 +1,4 @@
 # Extra stuff added by me
-*.json
-*.json.*
 logNum.txt
 tmp/
 data/
